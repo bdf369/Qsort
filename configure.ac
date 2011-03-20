@@ -5,7 +5,7 @@ AC_PREREQ([2.65])
 AC_INIT([Qsort], [0.1], [friedman.barry@gmail.com], [qsort],
         [http://github.com/bdf369/qsort])
 AC_CONFIG_AUX_DIR([build-aux])
-AM_INIT_AUTOMAKE([-Wall -Werror])
+AM_INIT_AUTOMAKE([foreign -Wall -Werror])
 AC_CONFIG_SRCDIR([src/qsort.c])
 AC_CONFIG_HEADERS([config.h])
 
