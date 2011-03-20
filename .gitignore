@@ -1,0 +1,16 @@
+Makefile
+Makefile.in
+aclocal.m4
+autom4te.cache/
+build-aux/
+config.h
+config.h.in
+config.log
+config.status
+configure
+src/.deps/
+src/Makefile
+src/Makefile.in
+src/qsort
+src/qsort.o
+stamp-h1
