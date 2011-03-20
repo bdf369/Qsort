@@ -60,10 +60,9 @@ static void
 version (void)
 {
   printf ("%s\n"
-          "Copyright (C) 2011 Barry Friedman\n"
-          "License GPLv3+: GNU GPL version 3 or later "
-          "<http://gnu.org/licenses/gpl.html>\n"
-          "This is free software: You are free to change and redistribute it.\n"
+          "Copyright 2011 Google Inc.\n"
+          "License: Apache License, Version 2.0, available at\n"
+          "  http://www.apache.org/licenses/LICENSE-2.0\n"
           "This program comes with ABSOLUTELY NO WARRANTY.\n",
           PACKAGE_STRING);
   exit(0);
