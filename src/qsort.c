@@ -15,11 +15,17 @@
  * limitations under the License.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <getopt.h>
-#include <sys/time.h>
 #include <config.h>
+#include <stdio.h>
+#if HAVE_STDLIB_H
+#include <stdlib.h>
+#endif /* HAVE_STDLIB_H */
+#include <getopt.h>
+#include <time.h>
+
+#ifndef HAVE_CLOCK_GETTIME
+#define HAVE_CLOCK_GETTIME 0
+#endif /* HAVE_CLOCK_GETTIME */
 
 /*
  * Swap contents of arguments a and b
@@ -79,7 +85,7 @@ usage (int errcode)
            "       <count> is the number of random integers to sort\n"
            "       optargs:\n"
            "       --print     print out sorted array\n"
-           "       --timing    print sort time in microseconds\n"
+           "       --timing    print sort time in nanoseconds\n"
            "       --help      print usage information\n"
            "       --version   output version information and exit\n"
            "Report bugs to: %s\n"
@@ -158,16 +164,29 @@ main (int argc, char **argv)
       exit (1);
     }
 
+  if (timing && !HAVE_CLOCK_GETTIME)
+    {
+      fprintf (stderr, "Warning: No clock_gettime(), timing not supported\n");
+    }
+
   int i;
 
   for (i=0; i<vsize; i++)
     testvec[i] = rand () % 1000;
 
-  struct timeval before, after;
+  struct timespec before, after;
+
+  if (HAVE_CLOCK_GETTIME)
+    {
+      clock_gettime (CLOCK_MONOTONIC, &before);
+    }
   
-  gettimeofday (&before, NULL);
   quicksort (testvec, vsize);
-  gettimeofday (&after, NULL);
+
+  if (HAVE_CLOCK_GETTIME)
+    {
+      clock_gettime (CLOCK_MONOTONIC, &after);
+    }
 
   if (print)
     {
@@ -176,13 +195,13 @@ main (int argc, char **argv)
         printf ("%d%s", testvec[i], i==(vsize-1) ? "}\n" : ", ");
     }
 
-  if (timing)
+  if (HAVE_CLOCK_GETTIME && timing)
     {
       unsigned long diffsec = after.tv_sec - before.tv_sec;
-      unsigned long diffusec = after.tv_usec - before.tv_usec;
-      unsigned long usec = diffsec * 1000000;
-      usec += diffusec;
-      printf ("%lu\n", usec);
+      unsigned long diffnsec = after.tv_nsec - before.tv_nsec;
+      unsigned long nsec = diffsec * 1000000000;
+      nsec += diffnsec;
+      printf ("%lu\n", nsec);
     }
 
   free (testvec);

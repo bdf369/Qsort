@@ -21,8 +21,12 @@ AC_CHECK_HEADERS([stdlib.h sys/time.h])
 AC_C_INLINE
 
 # Checks for library functions.
-AC_FUNC_MALLOC
-AC_CHECK_FUNCS([gettimeofday])
+AC_CHECK_LIB([rt], [clock_gettime])
+
+# We don't use malloc(0), so skip this check
+#AC_FUNC_MALLOC
+
+AC_CHECK_FUNCS([clock_gettime])
 
 AC_CONFIG_FILES([Makefile
                  src/Makefile])
