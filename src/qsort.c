@@ -22,6 +22,8 @@
 #endif /* HAVE_STDLIB_H */
 #include <getopt.h>
 #include <time.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 #ifndef HAVE_CLOCK_GETTIME
 #define HAVE_CLOCK_GETTIME 0
@@ -38,6 +40,23 @@ swap (int *a, int *b)
   *b = t;
 }
 
+static void
+setpivot (int *array, int len)
+{
+  if (MEDIAN_PIVOT)
+    {
+      int mid = len/2;
+      if (array[0] > array[mid]) swap(&array[0], &array[mid]);
+      if (array[mid] > array[len-1]) swap(&array[mid], &array[len-1]);
+      if (array[0] > array[mid]) swap(&array[0], &array[mid]);
+    }
+  else
+    {
+      int pidx = rand () % len;
+      swap (&array[0], &array[pidx]);
+    }
+}
+
 /*
  * Sort integer array of length len using Quicksort algorithm
  */
@@ -46,8 +65,7 @@ quicksort (int *array, int len)
 {
   if (len <= 1)
     return;
-  int pidx = rand () % len;
-  swap (&array[0], &array[pidx]);
+  setpivot(array, len);
   int i,last=0;
   for (i=1; i<len; ++i)
     {
@@ -170,7 +188,7 @@ main (int argc, char **argv)
     }
 
   int i;
-
+  srand(getpid());
   for (i=0; i<vsize; i++)
     testvec[i] = rand () % 1000;
 

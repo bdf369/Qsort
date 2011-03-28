@@ -9,6 +9,15 @@ AM_INIT_AUTOMAKE([foreign -Wall -Werror])
 AC_CONFIG_SRCDIR([src/qsort.c])
 AC_CONFIG_HEADERS([config.h])
 
+AC_ARG_ENABLE([median-pivot],
+              AC_HELP_STRING([--enable-median-pivot],
+                             [Use median of first,mid,last as pivot]))
+
+if test "${enable_median_pivot}" = "yes"; then
+  AC_DEFINE([MEDIAN_PIVOT],1,
+            [Use median of fist,mid,last as pivot instead of rand()])
+fi
+
 # Checks for programs.
 AC_PROG_CC
 
